@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>hangman</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+
+</head>
+<body>
+
+ <div class="jumbotron">
+     <h1 class="text-center">Hangman Game</h1>
+     <h3 class="text-center">Great Artists of the 20th Century</h3>
+ </div>
+
+ 
+
+ <div class="container">
+
+  <div class="content text-center">
+
+    <div class="underscore"></div>
+    <div class="wrongGuess">Wrong letters: </div>
+    <div class="guesses">Remaining Guesses: </div>
+    <div class="wins">Wins: </div>
+    <div class="losses">Losses: </div>
+
+ </div>
+ </div>
+ 
+
+  <script type="text/javascript">
+
+ 
+  // VARIABLES ------------------------  
+  //create an array of words
+
+  var artists = ["warhol", "pollock", "klimt", "picasso", "miro", "johns", "vangogh", "monet", "degas", "matisse", "renoir"];
+
+  //choose word randomly
+  //randomWord = chosenWord
+
+  var randomWord = artists[Math.floor(Math.random() * artists.length)];
+  console.log(randomWord);
+
+  var answerArray = [];
+
+  var rightWord = [];
+
+  var wrongWord = [];
+
+  //DOM MANIPULATION -----------------
+
+  var answerArrayUnderscores = document.getElementsByClassName("underscore");
+  var docWrongWord = document.getElementsByClassName("wrongGuess");
+  var docRemainingGuesses = document.getElementsByClassName("guesses");
+  var docLosses = document.getElementsByClassName("losses");
+
+
+  //MAIN CODE ------------------------
+
+  var generateUnderscore = function () {
+    for (var i = 0; i < randomWord.length; i++) {
+      answerArray.push(" _ ");
+    }
+    return answerArray;
+  }
+
+  console.log(generateUnderscore());
+
+  //get users guess
+
+document.addEventListener("keypress", function (event) {
+    var keyword = String.fromCharCode(event.keyCode);
+   
+   //if useres guess is right 
+    if (randomWord.indexOf(keyword) > -1) {
+        //push to right words array
+        rightWord.push(keyword);
+        
+        //replace underscore with letter
+        answerArray[randomWord.indexOf(keyword)] = keyword;
+
+        //for loop over randomWord
+        
+
+        //logs it in the DOM
+        answerArrayUnderscores[0].innerHTML = answerArray.join(" ");
+        
+    } 
+        //push to wrong words array
+        else {
+            wrongWord.push(keyword);
+            //logs it in the DOM
+            docWrongWord[0].innerHTML = "Wrong letters: " + wrongWord.join(" ");
+
+    }
+     
+});
+
+answerArrayUnderscores[0].innerHTML = answerArray.join(" ");
+
+    //WINS AND LOSSES -----------
+
+    var remainingGuesses = 13;
+    var wins = 0;
+    var losses = 0;
+
+
+    //counts down guesses on key up
+    document.onkeyup = function (event) {
+        remainingGuesses--;
+        docRemainingGuesses[0].innerHTML = "Remaining Guesses: " + remainingGuesses;
+
+        //logs wins and losses based on remianing guesses
+        if (remainingGuesses === 0 && answerArray !== randomWord) {
+            losses++;
+            refresh ();
+            docLosses[0].innerHTML = "Losses: " + losses;  
+        }
+        
+        if (answerArray === randomWord) { 
+            wins++;
+            refresh ();
+            console.log(wins);
+        }
+
+    }
+
+    //refresh function 
+
+    var refresh = function () {
+        randomWord = artists[Math.floor(Math.random() * artists.length)];
+        remainingGuesses = 13;
+        wrongWord = [];
+    }
+
+
+
+
+
+
+
+  </script>
+
+</body>
+</html>
